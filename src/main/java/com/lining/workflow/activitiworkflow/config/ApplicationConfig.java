@@ -29,7 +29,6 @@ import com.zaxxer.hikari.HikariDataSource;
  * @date 2017/10/26 16:36
  */
 @Configuration
-@ImportResource(locations = {"classpath:activiti-login-context.xml","classpath:activiti-ui-context.xml"})
 public class ApplicationConfig {
 
 	@Autowired
