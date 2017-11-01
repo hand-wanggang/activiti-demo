@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://static.runoob.com/assets/vue/1.0.11/vue.min.js"></script>
+    <script src="js/view.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        .panel-group{max-height:770px;overflow: auto;}
+        .leftMenu{margin:10px;margin-top:5px;}
+        .leftMenu .panel-heading{font-size:14px;padding-left:20px;height:36px;line-height:36px;color:white;position:relative;cursor:pointer;}/*转成手形图标*/
+        .leftMenu .panel-heading span{position:absolute;right:10px;top:12px;}
+        .leftMenu .menu-item-left{padding: 2px; background: transparent; border:1px solid transparent;border-radius: 6px;}
+        .leftMenu .menu-item-left:hover{background:#C4E3F3;border:1px solid #1E90FF;}
+        .deploy_btn{}
+    </style>
+</head>
+<body>
+<div class="row">
+    <div class="col-md-2">
+        <div class="panel-group table-responsive" role="tablist">
+            <div class="panel panel-primary leftMenu">
+                <!-- 利用data-target指定要折叠的分组列表 -->
+                <div class="panel-heading" id="collapseListGroupHeading1" data-toggle="collapse" data-target="#collapseListGroup1" role="tab" >
+                    <h4 class="panel-title">
+                        模型管理
+                        <span class="glyphicon glyphicon-chevron-up right"></span>
+                    </h4>
+                </div>
+                <!-- .panel-collapse和.collapse标明折叠元素 .in表示要显示出来 -->
+                <div id="collapseListGroup1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="collapseListGroupHeading1">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <!-- 利用data-target指定URL -->
+                            <button name="list_btn" id="model-list" class="menu-item-left" data-target="test2.html">
+                                <span class="glyphicon glyphicon-triangle-right"></span>流程模型列表
+                            </button>
+                        </li>
+
+                        <li class="list-group-item">
+                            <!-- 利用data-target指定URL -->
+                            <button class="menu-item-left" data-toggle="modal" data-target="#myModal">
+                                <span class="glyphicon glyphicon-triangle-right"></span>创建流程模型
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div><!--panel end-->
+            <div class="panel panel-primary leftMenu">
+                <div class="panel-heading" id="collapseListGroupHeading2" data-toggle="collapse" data-target="#collapseListGroup2" role="tab" >
+                    <h4 class="panel-title">
+                        流程管理
+                        <span class="glyphicon glyphicon-chevron-down right"></span>
+                    </h4>
+                </div>
+                <div id="collapseListGroup2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseListGroupHeading2">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <button name="list_btn" id="processes-list" class="menu-item-left">
+                                <span class="glyphicon glyphicon-triangle-right"></span>流程列表
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="panel panel-primary leftMenu">
+                <div class="panel-heading" id="collapseListGroupHeading3" data-toggle="collapse" data-target="#collapseListGroup3" role="tab" >
+                    <h4 class="panel-title">
+                        任务管理
+                        <span class="glyphicon glyphicon-chevron-down right"></span>
+                    </h4>
+                </div>
+                <div id="collapseListGroup3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collapseListGroupHeading3">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <button name="list_btn" id="task-list" class="menu-item-left">
+                                <span class="glyphicon glyphicon-triangle-right"></span>任务列表
+                            </button>
+                        </li>
+                        <li class="list-group-item">
+                            <button class="menu-item-left">
+                                <span class="glyphicon glyphicon-triangle-right"></span>我的待办
+                            </button>
+                        </li>
+
+                        <li class="list-group-item">
+                            <button class="menu-item-left">
+                                <span class="glyphicon glyphicon-triangle-right"></span>已办列表
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-10" style="margin-top: 20px">
+        <div class="panel panel-primary col-sm-10 col-sm-offset-1 m_form" style="padding: 0px">
+            <div class="panel-heading m_panel-title col-sm-12" style="margin: 0px;">
+                <h3 class="panel-title col-sm-6 col-sm-offset-3" style="text-align: center"></h3>
+            </div>
+            <div class="panel-body col-sm-12">
+
+                <table class="table" id="list_table">
+                    <thead >
+                    <tr>
+                        <th v-for="header in headers" >{{header.col}}</th>
+                    </tr>
+                    </thead>
+                    <tbody v-if="type === 1">
+                        <tr v-for="item in body">
+                            <td>{{item.id}}</td>  <!--id-->
+                            <td>{{item.name}}</td><!--名称列-->
+                            <td>{{item.key}}</td> <!--关键字列-->
+                            <td > <!--描述列-->
+                                {{item.metaInfo}}
+                            </td>
+                            <td>
+                                {{item.version}}
+                            </td>
+                            <td>
+                                <button name ={{item.id}} class="btn btn-primary btn-sm deploy_btn" onclick="deploy(this)">
+                                    部署
+                                </button>
+                            </td>
+                            <td>
+                                <button name ={{item.id}} class="btn btn-primary btn-sm deploy_btn" onclick="editor(this)">
+                                    编辑
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody v-if="type === 2">
+                        <tr v-for="item in body">
+                            <td>{{item.id}}</td>  <!--id-->
+                            <td>{{item.name}}</td><!--名称列-->
+                            <td>{{item.key}}</td> <!--关键字列-->
+                            <td > <!--描述列-->
+                                {{item.description}}
+                            </td>
+                            <td>
+                                {{item.version}}
+                            </td>
+                            <td>
+                                <button name ={{item.id}} class="btn btn-primary btn-sm deploy_btn" onclick="startProcess(this)">
+                                    启动
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                    <tbody v-if="type === 3">
+                        <tr v-for="item in body">
+                            <td>{{item.id}}</td>  <!--id-->
+                            <td>{{item.name}}</td><!--名称列-->
+                            <td > <!--描述列-->
+                                {{item.description}}
+                            </td>
+                            <td>
+                                {{item.processVariables.toString()}}
+                            </td>
+                            <td>
+                                <button name = {{item.id}} class="btn btn-primary btn-sm" onclick="checkTask(this)">
+                                    审核
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+<!--模态框区域-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="text-align: center">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title col-sm-6 col-sm-offset-3" id="myModalLabel">
+                        新建流程模型
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form" method="post" action="/models/create">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">模型名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="name" class="form-control" id="name" placeholder="模型名称">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="key" class="col-sm-2 control-label">关键字</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="key" class="form-control" id="key" placeholder="输入关键字">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="col-sm-2 control-label">描述</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="description" class="form-control" id="description" placeholder="输入描述">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <input type="submit" class="btn btn-default" value="确定"/>
+                            </div>
+                        </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--模态框-2-->
+<div>
+        <div class="modal fade" id="startModal" tabindex="-1" role="dialog" aria-labelledby="startModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="text-align: center">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title col-sm-6 col-sm-offset-3" id="startModalLabel">
+                            启动流程实例
+                        </h4>
+                    </div>
+                    <div class="modal-body" id="dynamicForm">
+                        <form id="startForm" class="form-horizontal" role="form" method="post" action="/processes/start/{{id}}">
+                            <div class="form-group" v-for="prop in properties">
+                                <label for="{{prop.id}}" class="col-sm-2 control-label">{{prop.name}}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="{{prop.id}}" class="form-control" id="{{prop.id}}" placeholder="请输入{{prop.name}}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <!--<input type="submit" class="btn btn-default" value="确定"/>-->
+                                    <button id="startSubmit" class="btn btn-default" >确定</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+<!--模态框-3-->
+<div>
+    <div class="modal fade" id="checkModal" tabindex="-1" role="dialog" aria-labelledby="checkModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="text-align: center">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title col-sm-6 col-sm-offset-3" id="checkModalLabel">
+                        流程审核
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form id="checkForm" class="form-horizontal" role="form" method="post" action="{{id}}">
+                        <div class="form-group" v-for="r in read">
+                            <label for="{{r.name}}" class="col-sm-2 control-label">{{r.name}}</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="{{r.name}}" value="{{r.value}}" readonly="true">
+                            </div>
+                        </div>
+                        <div class="form-group" v-for="prop in write">
+                            <label for="{{prop.id}}--1" class="col-sm-2 control-label">{{prop.name}}</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="{{prop.id}}" class="form-control" id="{{prop.id}}--1" placeholder="请输入{{prop.name}}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button class="btn btn-default" >确定</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //------------------------侧边导航栏控制
+
+    $(function(){
+        $(".panel-heading").click(function(e){
+            /*切换折叠指示图标*/
+            $(this).find("span").toggleClass("glyphicon-chevron-down");
+            $(this).find("span").toggleClass("glyphicon-chevron-up");
+        });
+    });
+
+    //------------------------数据表格控制
+    var vue_header = new Vue({
+        el: '#list_table',
+        data: {
+            headers:modelHeader,
+            body:'',
+            type:''
+        },
+        methods:{
+            dynamicData:function (_data) {
+                var _self = this;
+                _self.headers = _data;
+            },
+            dynamicBody:function (_data) {
+                var _self = this;
+                _self.body = _data;
+            },
+            dynamicType:function(type){
+                this.type = type;
+            }
+        }
+    });
+    $("#model-list").click(function () {
+        vue_header.dynamicData(modelHeader);
+        vue_header.dynamicType(1);
+        request(model_list_url,vue_header.dynamicBody);
+    });
+    $("#processes-list").click(function () {
+        vue_header.dynamicData(processesHeader);
+        vue_header.dynamicType(2);
+        request(process_list_url,vue_header.dynamicBody);
+    });
+    $("#task-list").click(function () {
+        vue_header.dynamicData(taskHeader);
+        vue_header.dynamicType(3);
+        request(task_list_url,vue_header.dynamicBody);
+    });
+
+    var dynamicForm = new Vue({
+        el:'#dynamicForm',
+        data:{
+            properties:'',
+            id:''
+        },
+        methods:{
+            dynamicPro:function (data) {
+                var _self = this;
+                _self.properties = data;
+            },
+            dynamicId:function (data) {
+                var _self = this;
+                _self.id = data;
+            }
+        }
+    });
+
+
+    $("#startForm").submit(function () {
+        $('#startModal').modal('hide');
+        $.post(this.action,$(this).serialize(),function () {
+            alert("实例启动成功!");
+        });
+        return false;
+    });
+
+    var checkInfo = new Vue({
+        el:'#checkForm',
+        data:{
+            read:'',
+            write:'',
+            id:''
+        },
+        methods:{
+            dynamicRead:function (data) {
+                var _self = this;
+                _self.read = data.read;
+            },
+            dynamicWrite:function (data) {
+                var _self = this;
+                _self.write = data.write;
+            },
+            dynamicId:function (data) {
+                var _self = this;
+                _self.id = data;
+            }
+        }
+    });
+
+    function checkTask(data) {
+        checkInfo.dynamicId(data.name);
+        $.ajax({
+            url:task_form_url+data.name,
+            success:function (data) {
+                checkInfo.dynamicRead(data);
+                checkInfo.dynamicWrite(data);
+            }
+        });
+        $('#checkModal').modal('show');
+    }
+
+    $('#checkForm').submit(function () {
+        $('#checkModal').modal('hide');
+        $.post(task_exec_url+checkInfo.id,$(this).serialize(),function () {
+            alert("审批完成!");
+        })
+        console.log($(this).serialize());
+        return false;
+    });
+</script>
+</body>
+</html>

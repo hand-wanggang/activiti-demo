@@ -1,0 +1,22 @@
+server:
+  port: 10000
+  context-path: /
+spring:
+  application:
+    name: workflow
+
+#\u914D\u7F6E\u6570\u636E\u5E93
+hikari:
+  dataSource:
+    jdbcUrl: jdbc:mysql://localhost:3306/activiti?useUnicode=true&characterEncoding=UTF-8
+    userName: root
+    password: 853082
+    readOnly: false
+    connectionTimeout: 30000
+    idelTimeout: 600000
+    maxLifeTime: 1800000
+    maximumPoolSize: 3
+    driverClassName: com.mysql.jdbc.Driver
+security:
+  basic:
+    enabled: false
